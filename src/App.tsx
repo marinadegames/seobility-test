@@ -1,12 +1,26 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 import './App.css';
-import {MyForm} from "./MyForm";
+import {MyForm} from "./Components/MyForm/MyForm";
+import {Mode} from "./Components/Mode/Mode";
+
+export type ModeType = 'RESOLVE' | 'REJECT'
 
 function App() {
+
+    const [responseMode, setResponseMode] = useState<ModeType>('RESOLVE')
+
+    const changeMode = useCallback((mode: ModeType) => {
+        setResponseMode(mode)
+    }, [])
+
+
     return (
-        <div className="App">
+        <div>
             <h1>Форма обратной связи</h1>
-            <MyForm/>
+            <div className="App">
+                <MyForm mode={responseMode}/>
+                <Mode changeModeCallback={changeMode}/>
+            </div>
         </div>
     );
 }

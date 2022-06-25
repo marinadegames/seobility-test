@@ -1,0 +1,9 @@
+.mode {
+    display: flex;
+    flex-direction: column;
+}
+.inputItem {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+}
