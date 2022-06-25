@@ -4,6 +4,11 @@ import "react-datepicker/dist/react-datepicker.css";
 
 const regexEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
 
+type errorNameType = {
+    mode: boolean
+    errorMessage: string | null
+}
+
 export const MyForm = () => {
 
     const [name, setName] = useState<string>('')
@@ -11,6 +16,14 @@ export const MyForm = () => {
     const [tel, setTel] = useState<string>('')
     const [birthday, setBirthday] = useState(new Date());
     const [message, setMessage] = useState<string>('')
+
+    const [errorName, setErrorName] = useState<errorNameType>({
+        mode: false,
+        errorMessage: null
+    })
+    const [errorEmail, setErrorEmail] = useState<boolean>(false)
+    const [errorTel, setErrorTel] = useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = useState<boolean>(false)
 
     const nameValidation = () => {
         const arr = name.replace(/\s+/g, ' ').trim().split(' ')
@@ -21,17 +34,23 @@ export const MyForm = () => {
                 console.log(name.replace(/\s+/g, ' ').trim().toUpperCase())
                 setName(name.replace(/\s+/g, ' ').trim().toUpperCase())
             } else {
-                console.error('Ошибка: блина имени и фамилии должно быь от 3 до 30 символов!')
+                setErrorName({
+                    mode: true,
+                    errorMessage: 'Ошибка: длина имени и фамилии должны быть от 3 до 30 символов!'
+                })
             }
         } else {
-            console.error('Ошибка: Нужно ввести только имя и фамилию')
+            setErrorName({
+                mode: true,
+                errorMessage: 'Ошибка: Нужно ввести имя и фамилию'
+            })
         }
     }
     const emailValidation = () => {
         if (regexEmail.test(email)) {
             console.log(email)
         } else {
-            console.error('EMAIL WRONG!')
+            setErrorEmail(true)
         }
     }
     const telValidate = () => {
@@ -39,24 +58,28 @@ export const MyForm = () => {
         if (regexpNumber.test(tel)) {
             console.log(tel)
         } else {
-            console.error('ERROR: неверный формат номера!')
+            setErrorTel(true)
         }
     }
     const messageValidation = () => {
         if (message.length <= 300 && message.length > 9) {
             console.log(message)
         } else {
-            console.error('ERROR: текст сообщения должен быть мин 10 символов и макс 300 символов.')
+            setErrorMessage(true)
+
         }
     }
 
     const changeName = (e: string) => {
+        setErrorName({mode: false, errorMessage: null})
         setName(e)
     }
     const changeEmail = (e: string) => {
+        setErrorEmail(false)
         setEmail(e)
     }
-    const changeNumber = (e: string) => {
+    const changeTel = (e: string) => {
+        setErrorTel(false)
         setTel(e)
     }
     const changeBirthday = (e: any) => {
@@ -64,11 +87,30 @@ export const MyForm = () => {
         console.log(e)
     }
     const changeMessage = (e: string) => {
+        setErrorMessage(false)
         setMessage(e)
     }
 
     const send = () => {
-
+        let url = 'example.com'
+        const data = {
+            name,
+            email,
+            tel,
+            birthday,
+            message
+        }
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data)
+        }).then(res => {
+            console.log(res.json())
+        }).catch(error => {
+            console.error(error)
+        })
     }
 
     return (
@@ -79,12 +121,14 @@ export const MyForm = () => {
                     <input onBlur={nameValidation}
                            value={name}
                            onChange={e => changeName(e.currentTarget.value)}/>
+                    {errorName.mode && <small style={{color: 'red'}}>{errorName.errorMessage}</small>}
                 </div>
                 <div>
                     Email:
                     <input onBlur={emailValidation}
                            value={email}
                            onChange={e => changeEmail(e.currentTarget.value)}/>
+                    {errorEmail && <small style={{color: 'red'}}>EMAIL WRONG!</small>}
                 </div>
                 <div>
                     Телефон:
@@ -92,14 +136,13 @@ export const MyForm = () => {
                            value={tel}
                            name="tel"
                            onBlur={telValidate}
-                           onChange={e => changeNumber(e.currentTarget.value)}/>
-
+                           onChange={e => changeTel(e.currentTarget.value)}/>
+                    {errorTel && <small style={{color: 'red'}}>TEL WRONG!!</small>}
                 </div>
                 <div>
                     Дата рождения:
                     <DatePicker selected={birthday}
                                 onChange={(date) => changeBirthday(date)}/>
-
                 </div>
                 <div>
                     Текст сообщения:
@@ -108,6 +151,7 @@ export const MyForm = () => {
                               onBlur={messageValidation}
                               maxLength={300}
                               minLength={10}/>
+                    {errorMessage && <small style={{color: 'red'}}>ERROR: текст сообщения должен быть мин 10 символов и макс 300 символов.</small>}
                 </div>
                 <button onClick={send}>Send</button>
             </form>
