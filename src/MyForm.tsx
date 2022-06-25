@@ -10,7 +10,7 @@ export const MyForm = () => {
 
     const [name, setName] = useState<string>('')
     const [email, setEmail] = useState<string>('')
-    const [number, setNumber] = useState<number | null>()
+    const [tel, setTel] = useState<string>('')
     const [birthday, setBirthday] = useState(new Date());
     const [message, setMessage] = useState<Date>()
 
@@ -41,12 +41,25 @@ export const MyForm = () => {
         }
     }
 
+
+
+
+    const telValidate = () => {
+        const regexpNumber = /^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
+        if (regexpNumber.test(tel)) {
+            console.log(tel)
+        }
+        else {
+            console.error('ERROR: неверный формат номера!')
+        }
+    }
+
     const changeEmail = (e: string) => {
         setEmail(e)
     }
 
-    const changeNumber = (e: number) => {
-        setNumber(e)
+    const changeNumber = (e: string) => {
+        setTel(e)
     }
 
     const changeBirthday = (e: any) => {
@@ -73,8 +86,11 @@ export const MyForm = () => {
                 </div>
                 <div>
                     Телефон:
-                    <input type={'number'}
-                           onChange={e => changeNumber(e.currentTarget.valueAsNumber)}/>
+                    <input type="tel"
+                           name="tel"
+                           onBlur={telValidate}
+                           onChange={e => changeNumber(e.currentTarget.value)}/>
+
                 </div>
                 <div>
                     Дата рождения:
