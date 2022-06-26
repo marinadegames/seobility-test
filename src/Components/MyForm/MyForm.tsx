@@ -15,7 +15,7 @@ export const MyForm = ({mode}: PropsType) => {
     const [name, setName] = useState<string>('')
     const [email, setEmail] = useState<string>('')
     const [tel, setTel] = useState<string>('')
-    const [birthday, setBirthday] = useState<Date | null>(new Date());
+    const [birthday, setBirthday] = useState<Date | null>(null);
     const [message, setMessage] = useState<string>('')
 
     const [errorName, setErrorName] = useState<errorNameType>({
@@ -107,6 +107,7 @@ export const MyForm = ({mode}: PropsType) => {
     }
 
     const send = async () => {
+        setResponseMessage({mode: 'OFF', message: ''})
         changeBtnRespMode(true)
 
         // данные, которые мы будет отправлять:
@@ -147,6 +148,7 @@ export const MyForm = ({mode}: PropsType) => {
             setTel('')
             setName('')
             setMessage('')
+            setBirthday(null)
             setValidationCheck({
                 name: false,
                 tel: false,
@@ -164,7 +166,6 @@ export const MyForm = ({mode}: PropsType) => {
             changeBtnRespMode(false)
         })
     }
-
 
     return (
         <div className={s.main}>
@@ -207,8 +208,9 @@ export const MyForm = ({mode}: PropsType) => {
                             selected={birthday}
                             onChange={(date) => changeBirthday(date)}
                             showYearDropdown
+                            maxDate={new Date()}
+                            placeholderText={'Выберите дату'}
                             dateFormat="dd/MM/yyyy"
-                            // dateFormatCalendar="MMMM"
                             yearDropdownItemNumber={100}
                             scrollableYearDropdown
                         />
@@ -229,7 +231,6 @@ export const MyForm = ({mode}: PropsType) => {
                 {buttonRespMode ? <Spinner size={'50px'}/> : <button disabled={Object.values(validationCheck).includes(false)}
                                                                      style={{height: 40}}
                                                                      onClick={send}>Send</button>}
-
             </form>
             {responseMessage.mode === 'ERROR' && <span style={{color: 'red'}}>{responseMessage.message}</span>}
             {responseMessage.mode === 'SUCCESSFUL' && <span style={{color: 'green'}}>{responseMessage.message}</span>}
