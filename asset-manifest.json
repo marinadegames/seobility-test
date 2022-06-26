@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/seobility-test/static/css/main.ddaaadd5.css",
+    "main.js": "/seobility-test/static/js/main.33634d3e.js",
+    "index.html": "/seobility-test/index.html",
+    "main.ddaaadd5.css.map": "/seobility-test/static/css/main.ddaaadd5.css.map",
+    "main.33634d3e.js.map": "/seobility-test/static/js/main.33634d3e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ddaaadd5.css",
+    "static/js/main.33634d3e.js"
+  ]
+}
