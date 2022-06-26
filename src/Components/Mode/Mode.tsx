@@ -18,6 +18,7 @@ export const Mode = ({changeModeCallback}: PropsType) => {
             <div className={s.inputItem}>
                 <input type={"radio"}
                        name={'mode'}
+                       defaultChecked={true}
                        onChange={() => callback("RESOLVE")}/>
                 <small>УСПЕШНО (через 2 секунды)</small>
             </div>

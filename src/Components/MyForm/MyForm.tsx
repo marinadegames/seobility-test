@@ -2,7 +2,7 @@ import {useState} from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import s from './MyForm.module.css'
-import {DataType, errorNameType, MessageStateType, ModeType} from "../../Utils/types";
+import {errorNameType, MessageStateType, ModeType} from "../../Utils/types";
 import {regexEmail, regexpNumber} from "../../Utils/regexps";
 import {Spinner} from "../Spinner/Spinner";
 
@@ -15,7 +15,7 @@ export const MyForm = ({mode}: PropsType) => {
     const [name, setName] = useState<string>('')
     const [email, setEmail] = useState<string>('')
     const [tel, setTel] = useState<string>('')
-    const [birthday, setBirthday] = useState<Date>(new Date());
+    const [birthday, setBirthday] = useState<Date | null>(new Date());
     const [message, setMessage] = useState<string>('')
 
     const [errorName, setErrorName] = useState<errorNameType>({
@@ -98,7 +98,7 @@ export const MyForm = ({mode}: PropsType) => {
         setErrorTel(false)
         setTel(e)
     }
-    const changeBirthday = (e: any) => {
+    const changeBirthday = (e: Date | null) => {
         setBirthday(e)
     }
     const changeMessage = (e: string) => {
@@ -165,6 +165,7 @@ export const MyForm = ({mode}: PropsType) => {
         })
     }
 
+
     return (
         <div className={s.main}>
             <form className={s.form} onClick={e => e.preventDefault()}>
@@ -199,11 +200,18 @@ export const MyForm = ({mode}: PropsType) => {
                     {errorTel && <small className={s.respMessage}>Неправильный номер</small>}
                 </div>
                 <div className={s.item}>
-                    <b>Дата рождения:</b>
+                    <b>Дата рождения:</b><small>День / Месяц / Год</small>
                     <div>
-                        <DatePicker selected={birthday}
-                                    className={s.inputStyles}
-                                    onChange={(date) => changeBirthday(date)}/>
+                        <DatePicker
+                            className={s.inputStyles}
+                            selected={birthday}
+                            onChange={(date) => changeBirthday(date)}
+                            showYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            // dateFormatCalendar="MMMM"
+                            yearDropdownItemNumber={100}
+                            scrollableYearDropdown
+                        />
                     </div>
                 </div>
                 <div className={s.item}>
