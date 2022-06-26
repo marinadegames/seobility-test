@@ -12,11 +12,11 @@ type PropsType = {
 
 export const MyForm = ({mode}: PropsType) => {
 
-    const [name, setName] = useState<string>('Ivan Ivanov')
-    const [email, setEmail] = useState<string>('efqwewe@gmail.com')
-    const [tel, setTel] = useState<string>('+79999999999')
+    const [name, setName] = useState<string>('')
+    const [email, setEmail] = useState<string>('')
+    const [tel, setTel] = useState<string>('')
     const [birthday, setBirthday] = useState(new Date());
-    const [message, setMessage] = useState<string>('qwdqwpokdqpwokdpqowkdqpwkdopqw')
+    const [message, setMessage] = useState<string>('')
 
     const [errorName, setErrorName] = useState<errorNameType>({
         mode: false,
@@ -39,9 +39,7 @@ export const MyForm = ({mode}: PropsType) => {
     })
     const [buttonRespMode, setButtonRespMode] = useState<boolean>(false)
 
-    const changeBtnRespMode = (bool: boolean) => {
-        setButtonRespMode(bool)
-    }
+    const changeBtnRespMode = (bool: boolean) => setButtonRespMode(bool)
 
     const nameValidation = () => {
         const arr = name.replace(/\s+/g, ' ').trim().split(' ')
@@ -110,13 +108,15 @@ export const MyForm = ({mode}: PropsType) => {
 
     const send = async () => {
         changeBtnRespMode(true)
-        const data: DataType = {
-            name,
-            email,
-            tel,
-            birthday,
-            message
-        }
+
+        // данные, которые мы будет отправлять:
+        // const data: DataType = {
+        //     name,
+        //     email,
+        //     tel,
+        //     birthday,
+        //     message
+        // }
 
         // Если будет API
         // await fetch(url, {
@@ -140,10 +140,8 @@ export const MyForm = ({mode}: PropsType) => {
                         message: 'Произошла ошибка!'
                     })
                 }
-
             }, 2000)
-        }).then(res => {
-            console.log(res)
+        }).then(() => {
             setResponseMessage({mode: 'SUCCESSFUL', message: 'Форма успешно отправлена!'})
             setEmail('')
             setTel('')
@@ -220,7 +218,7 @@ export const MyForm = ({mode}: PropsType) => {
                               minLength={10}/>
                     {errorMessage && <small className={s.respMessage}>Текст сообщения должен быть мин 10 символов и макс 300 символов.</small>}
                 </div>
-                {buttonRespMode ?<Spinner size={'50px'}/>  : <button disabled={Object.values(validationCheck).includes(false)}
+                {buttonRespMode ? <Spinner size={'50px'}/> : <button disabled={Object.values(validationCheck).includes(false)}
                                                                      style={{height: 40}}
                                                                      onClick={send}>Send</button>}
 
