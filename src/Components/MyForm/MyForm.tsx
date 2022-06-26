@@ -15,7 +15,7 @@ export const MyForm = ({mode}: PropsType) => {
     const [name, setName] = useState<string>('')
     const [email, setEmail] = useState<string>('')
     const [tel, setTel] = useState<string>('')
-    const [birthday, setBirthday] = useState(new Date());
+    const [birthday, setBirthday] = useState<Date>(new Date());
     const [message, setMessage] = useState<string>('')
 
     const [errorName, setErrorName] = useState<errorNameType>({
