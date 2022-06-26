@@ -4,19 +4,19 @@ import "react-datepicker/dist/react-datepicker.css";
 import s from './MyForm.module.css'
 import {DataType, errorNameType, MessageStateType, ModeType} from "../../Utils/types";
 import {regexEmail, regexpNumber} from "../../Utils/regexps";
+import {Spinner} from "../Spinner/Spinner";
 
 type PropsType = {
     mode: ModeType
 }
 
-
 export const MyForm = ({mode}: PropsType) => {
 
-    const [name, setName] = useState<string>('')
-    const [email, setEmail] = useState<string>('')
-    const [tel, setTel] = useState<string>('')
-    const [birthday, setBirthday] = useState();
-    const [message, setMessage] = useState<string>('')
+    const [name, setName] = useState<string>('Ivan Ivanov')
+    const [email, setEmail] = useState<string>('efqwewe@gmail.com')
+    const [tel, setTel] = useState<string>('+79999999999')
+    const [birthday, setBirthday] = useState(new Date());
+    const [message, setMessage] = useState<string>('qwdqwpokdqpwokdpqowkdqpwkdopqw')
 
     const [errorName, setErrorName] = useState<errorNameType>({
         mode: false,
@@ -37,6 +37,11 @@ export const MyForm = ({mode}: PropsType) => {
         birthday: true,
         message: false
     })
+    const [buttonRespMode, setButtonRespMode] = useState<boolean>(false)
+
+    const changeBtnRespMode = (bool: boolean) => {
+        setButtonRespMode(bool)
+    }
 
     const nameValidation = () => {
         const arr = name.replace(/\s+/g, ' ').trim().split(' ')
@@ -49,14 +54,14 @@ export const MyForm = ({mode}: PropsType) => {
             } else {
                 setErrorName({
                     mode: true,
-                    errorMessage: 'Ошибка: длина имени и фамилии должны быть от 3 до 30 символов!'
+                    errorMessage: 'Длина имени и фамилии должны быть от 3 до 30 символов!'
                 })
             }
 
         } else {
             setErrorName({
                 mode: true,
-                errorMessage: 'Ошибка: Нужно ввести имя и фамилию'
+                errorMessage: 'Нужно ввести имя и фамилию'
             })
         }
     }
@@ -104,6 +109,7 @@ export const MyForm = ({mode}: PropsType) => {
     }
 
     const send = async () => {
+        changeBtnRespMode(true)
         const data: DataType = {
             name,
             email,
@@ -157,6 +163,7 @@ export const MyForm = ({mode}: PropsType) => {
             setTimeout(() => {
                 setResponseMessage({mode: 'OFF', message: ''})
             }, 5000)
+            changeBtnRespMode(false)
         })
     }
 
@@ -164,53 +171,62 @@ export const MyForm = ({mode}: PropsType) => {
         <div className={s.main}>
             <form className={s.form} onClick={e => e.preventDefault()}>
                 <div className={s.item}>
-                    Имя и фамилия:
+                    <b>Имя и фамилия:</b>
                     <input onBlur={nameValidation}
+                           className={s.inputStyles}
                            pattern={"[A-Za-z]"}
                            value={name}
+                           placeholder={'Имя и фамилия (латиницей)'}
                            onChange={e => changeName(e.currentTarget.value)}/>
-                    {errorName.mode && <small style={{color: 'red'}}>{errorName.errorMessage}</small>}
+                    {errorName.mode && <small className={s.respMessage}>{errorName.errorMessage}</small>}
                 </div>
                 <div className={s.item}>
-                    Email:
+                    <b>Email:</b>
                     <input onBlur={emailValidation}
                            value={email}
+                           className={s.inputStyles}
+                           placeholder={'email'}
                            onChange={e => changeEmail(e.currentTarget.value)}/>
-                    {errorEmail && <small style={{color: 'red'}}>EMAIL WRONG!</small>}
+                    {errorEmail && <small className={s.respMessage}>Неправильный формат email</small>}
                 </div>
                 <div className={s.item}>
-                    Телефон:
+                    <b>Телефон:</b><small>(в формате +7(xxx)xxx-xx-xx)</small>
                     <input type="tel"
                            value={tel}
+                           className={s.inputStyles}
+                           placeholder={'Номер телефона (Россия)'}
                            name="tel"
                            onBlur={telValidate}
                            onChange={e => changeTel(e.currentTarget.value)}/>
-                    {errorTel && <small style={{color: 'red'}}>TEL WRONG!!</small>}
+                    {errorTel && <small className={s.respMessage}>Неправильный номер</small>}
                 </div>
                 <div className={s.item}>
-                    Дата рождения:
+                    <b>Дата рождения:</b>
                     <div>
                         <DatePicker selected={birthday}
+                                    className={s.inputStyles}
                                     onChange={(date) => changeBirthday(date)}/>
                     </div>
-
                 </div>
                 <div className={s.item}>
-                    Текст сообщения:
+                    <b>Текст сообщения:</b>
                     <textarea value={message}
                               onChange={e => changeMessage(e.currentTarget.value)}
                               onBlur={messageValidation}
+                              className={s.inputStyles}
+                              placeholder={'Ваше сообщение'}
                               maxLength={300}
                               style={{height: 80}}
                               minLength={10}/>
-                    {errorMessage && <small style={{color: 'red'}}>ERROR: текст сообщения должен быть мин 10 символов и макс 300 символов.</small>}
+                    {errorMessage && <small className={s.respMessage}>Текст сообщения должен быть мин 10 символов и макс 300 символов.</small>}
                 </div>
-                <button disabled={Object.values(validationCheck).includes(false)} onClick={send}>Send</button>
-            </form>
+                {buttonRespMode ?<Spinner size={'50px'}/>  : <button disabled={Object.values(validationCheck).includes(false)}
+                                                                     style={{height: 40}}
+                                                                     onClick={send}>Send</button>}
 
+            </form>
             {responseMessage.mode === 'ERROR' && <span style={{color: 'red'}}>{responseMessage.message}</span>}
             {responseMessage.mode === 'SUCCESSFUL' && <span style={{color: 'green'}}>{responseMessage.message}</span>}
-
         </div>
     )
 }

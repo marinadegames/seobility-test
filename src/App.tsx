@@ -4,7 +4,6 @@ import {MyForm} from "./Components/MyForm/MyForm";
 import {Mode} from "./Components/Mode/Mode";
 import {ModeType} from "./Utils/types";
 
-
 function App() {
 
     const [responseMode, setResponseMode] = useState<ModeType>('RESOLVE')
