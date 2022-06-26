@@ -2,8 +2,8 @@ import React, {useCallback, useState} from 'react';
 import './App.css';
 import {MyForm} from "./Components/MyForm/MyForm";
 import {Mode} from "./Components/Mode/Mode";
+import {ModeType} from "./Utils/types";
 
-export type ModeType = 'RESOLVE' | 'REJECT'
 
 function App() {
 
@@ -12,7 +12,6 @@ function App() {
     const changeMode = useCallback((mode: ModeType) => {
         setResponseMode(mode)
     }, [])
-
 
     return (
         <div>

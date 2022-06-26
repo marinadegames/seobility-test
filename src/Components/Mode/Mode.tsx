@@ -1,5 +1,5 @@
 import s from './Mode.module.css'
-import {ModeType} from "../../App";
+import {ModeType} from "../../Utils/types";
 
 type PropsType = {
     changeModeCallback: (mode: ModeType) => void

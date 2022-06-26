@@ -2,29 +2,13 @@ import {useState} from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import s from './MyForm.module.css'
-import {ModeType} from "../../App";
+import {DataType, errorNameType, MessageStateType, ModeType} from "../../Utils/types";
+import {regexEmail, regexpNumber} from "../../Utils/regexps";
 
-const regexEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
-
-type errorNameType = {
-    mode: boolean
-    errorMessage: string | null
-}
-type DataType = {
-    name: string
-    email: string
-    tel: string
-    birthday: Date | undefined
-    message: string
-}
 type PropsType = {
     mode: ModeType
 }
-type ModeMessageType = 'ERROR' | 'SUCCESSFUL' | "OFF"
-type MessageStateType = {
-    mode: ModeMessageType,
-    message: string
-}
+
 
 export const MyForm = ({mode}: PropsType) => {
 
@@ -60,7 +44,6 @@ export const MyForm = ({mode}: PropsType) => {
             let firstName = arr[0]
             let lastName = arr[1]
             if (firstName.length > 2 && firstName.length < 31 && lastName.length > 2 && lastName.length < 31) {
-                console.log(name.replace(/\s+/g, ' ').trim().toUpperCase())
                 setName(name.replace(/\s+/g, ' ').trim().toUpperCase())
                 setValidationCheck({...validationCheck, name: true})
             } else {
@@ -79,16 +62,14 @@ export const MyForm = ({mode}: PropsType) => {
     }
     const emailValidation = () => {
         if (regexEmail.test(email)) {
-            console.log(email)
             setValidationCheck({...validationCheck, email: true})
         } else {
             setErrorEmail(true)
         }
     }
     const telValidate = () => {
-        const regexpNumber = /^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
+
         if (regexpNumber.test(tel)) {
-            console.log(tel)
             setValidationCheck({...validationCheck, tel: true})
         } else {
             setErrorTel(true)
@@ -96,11 +77,9 @@ export const MyForm = ({mode}: PropsType) => {
     }
     const messageValidation = () => {
         if (message.length <= 300 && message.length > 9) {
-            console.log(message)
             setValidationCheck({...validationCheck, message: true})
         } else {
             setErrorMessage(true)
-
         }
     }
 
@@ -118,7 +97,6 @@ export const MyForm = ({mode}: PropsType) => {
     }
     const changeBirthday = (e: any) => {
         setBirthday(e)
-        console.log(e)
     }
     const changeMessage = (e: string) => {
         setErrorMessage(false)
